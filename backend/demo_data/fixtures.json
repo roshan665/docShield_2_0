@@ -1,0 +1,876 @@
+{
+  "users": [
+    {
+      "employee_id": "EMP-ADMIN-001",
+      "email": "admin@ncrb.gov.in",
+      "full_name": "DOCSHIELD System Administrator",
+      "password": "Admin@DocShield2026!",
+      "role_name": "system_admin",
+      "department": "Information Technology & Cyber Security",
+      "designation": "Chief System Security Officer"
+    },
+    {
+      "employee_id": "EMP-INV-001",
+      "email": "officer@ncrb.gov.in",
+      "full_name": "Inspector Rajesh Sharma",
+      "password": "Investigator@2026!",
+      "role_name": "investigator",
+      "department": "Cybercrime Investigation Division",
+      "designation": "Senior Inspector"
+    },
+    {
+      "employee_id": "EMP-SUP-001",
+      "email": "supervisor@ncrb.gov.in",
+      "full_name": "SP Anita Deshmukh",
+      "password": "Supervisor@2026!",
+      "role_name": "supervisor",
+      "department": "Supervisory Oversight Division",
+      "designation": "Superintendent of Police"
+    },
+    {
+      "employee_id": "EMP-FOR-001",
+      "email": "forensic@ncrb.gov.in",
+      "full_name": "Dr. Vikram Sen",
+      "password": "Forensic@2026!",
+      "role_name": "forensic_expert",
+      "department": "Central Forensic Science Laboratory",
+      "designation": "Senior Scientific Officer"
+    },
+    {
+      "employee_id": "EMP-LEG-001",
+      "email": "legal@ncrb.gov.in",
+      "full_name": "Advocate Priya Rao",
+      "password": "Legal@2026!",
+      "role_name": "legal_officer",
+      "department": "Directorate of Prosecution",
+      "designation": "Public Prosecutor"
+    },
+    {
+      "employee_id": "EMP-INV-002",
+      "email": "officer2@ncrb.gov.in",
+      "full_name": "Sub-Inspector Vikram Patel",
+      "password": "Investigator2@2026!",
+      "role_name": "investigator",
+      "department": "Special Crime Branch",
+      "designation": "Sub-Inspector"
+    },
+    {
+      "employee_id": "EMP-COURT-001",
+      "email": "court@docshield.gov.in",
+      "full_name": "Sessions Court Registrar",
+      "password": "CourtClerk@2026!",
+      "role_name": "legal_officer",
+      "department": "Delhi District Courts",
+      "designation": "Registrar of Evidence"
+    }
+  ],
+  "cases": [
+    {
+      "case_number": "CR-2026-CYBER01",
+      "fir_number": "FIR-2026-901",
+      "title": "Cyber Extortion & Dark Web Ransomware Syndicate",
+      "description": "Investigation into multi-jurisdictional ransomware extortion syndicate targeting national critical infrastructure and healthcare databases.",
+      "category": "cybercrime",
+      "priority": "critical",
+      "status": "under_investigation",
+      "police_station": "Cyber Crime Special Cell, Lodhi Road",
+      "district": "New Delhi",
+      "state": "Delhi",
+      "lead_officer_email": "officer@ncrb.gov.in",
+      "members": [
+        {
+          "email": "officer@ncrb.gov.in",
+          "role_in_case": "lead_investigator"
+        },
+        {
+          "email": "forensic@ncrb.gov.in",
+          "role_in_case": "forensic_analyst"
+        },
+        {
+          "email": "supervisor@ncrb.gov.in",
+          "role_in_case": "supervisor"
+        },
+        {
+          "email": "legal@ncrb.gov.in",
+          "role_in_case": "legal_counsel"
+        }
+      ],
+      "documents": [
+        {
+          "title": "FIR 901 - Cyber PS South",
+          "document_type": "fir",
+          "classification": "confidential",
+          "filename": "fir_report.pdf",
+          "mime_type": "application/pdf",
+          "uploader_email": "officer@ncrb.gov.in",
+          "ocr_text": "FIRST INFORMATION REPORT\nUnder Section 154 Cr.P.C.\nFIR No. 901/2026 Cyber Crime PS South Delhi.\nOffences: Sections 66C, 66D Information Technology Act 2000 & 384 IPC (Extortion).\nRansom demand of 45 Bitcoins detected against state data servers.",
+          "summary": "FIR registered on complaint of dark web extortion targeting hospital infrastructure with 45 Bitcoin demand.",
+          "entities": [
+            {
+              "entity_type": "law_section",
+              "entity_value": "66C IT Act"
+            },
+            {
+              "entity_type": "law_section",
+              "entity_value": "66D IT Act"
+            },
+            {
+              "entity_type": "law_section",
+              "entity_value": "384 IPC"
+            },
+            {
+              "entity_type": "fir_number",
+              "entity_value": "FIR-2026-901"
+            },
+            {
+              "entity_type": "police_station",
+              "entity_value": "Cyber Crime Special Cell"
+            }
+          ]
+        },
+        {
+          "title": "Server Intrusion & Network CCTV Access Log",
+          "document_type": "supporting_document",
+          "classification": "confidential",
+          "filename": "cctv_log.pdf",
+          "mime_type": "application/pdf",
+          "uploader_email": "officer@ncrb.gov.in",
+          "ocr_text": "INTRUSION LOG & DATA CENTER ACCESS REPORT\nTimestamp: 2026-03-01T02:14:00Z\nIP Address: 185.220.101.5\nPhysical access badge badge-9921 triggered terminal login.",
+          "summary": "Data center access log correlating malicious terminal commands with suspect IP and physical access credentials."
+        },
+        {
+          "title": "Witness Deposition - System Admin",
+          "document_type": "witness_statement",
+          "classification": "confidential",
+          "filename": "statement_v1.pdf",
+          "mime_type": "application/pdf",
+          "uploader_email": "officer@ncrb.gov.in",
+          "ocr_text": "STATEMENT OF WITNESS UNDER SECTION 161 CrPC.\nI, Amit Saxena, Lead Sysadmin, confirm unauthorized elevation of domain controller privileges occurred at 02:15 AM.",
+          "summary": "Sysadmin testimony confirming unauthorized administrative domain takeover.",
+          "versions": [
+            {
+              "version_number": 2,
+              "filename": "statement_v2.pdf",
+              "mime_type": "application/pdf",
+              "change_reason": "Added supplementary network packet capture hashes and signed officer endorsement.",
+              "uploader_email": "officer@ncrb.gov.in"
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_number": "EVID-2026-00009",
+          "title": "Encrypted USB Drive",
+          "description": "SanDisk 128GB USB drive recovered from suspect residence containing automated encryption scripts and dark web keys.",
+          "evidence_type": "digital_document",
+          "sensitivity_level": "sensitive",
+          "status": "in_analysis",
+          "current_custodian_email": "forensic@ncrb.gov.in",
+          "collection_location": "Suspect Residence, Sector 15 Noida",
+          "source": "Physical search seizure under Section 165 CrPC",
+          "registered_by_email": "officer@ncrb.gov.in",
+          "filename": "cctv_log.pdf",
+          "custody_events": [
+            {
+              "event_type": "registered",
+              "from_user_email": null,
+              "to_user_email": "officer@ncrb.gov.in",
+              "reason": "Initial seizure at search location",
+              "location": "Crime Scene, Sector 15 Noida",
+              "hours_ago": 72
+            },
+            {
+              "event_type": "transfer_initiated",
+              "from_user_email": "officer@ncrb.gov.in",
+              "to_user_email": "forensic@ncrb.gov.in",
+              "reason": "Handover to CFSL for forensic imaging and artifact analysis",
+              "location": "Central Forensic Science Laboratory, CBI Complex",
+              "hours_ago": 48
+            },
+            {
+              "event_type": "transfer_acknowledged",
+              "from_user_email": "officer@ncrb.gov.in",
+              "to_user_email": "forensic@ncrb.gov.in",
+              "reason": "Custody receipt acknowledged: Handover to CFSL for forensic imaging and artifact analysis",
+              "location": "CFSL Digital Evidence Locker Room A",
+              "hours_ago": 47
+            },
+            {
+              "event_type": "in_analysis",
+              "from_user_email": "forensic@ncrb.gov.in",
+              "to_user_email": "forensic@ncrb.gov.in",
+              "reason": "Initiated bitstream acquisition and cryptographic verification",
+              "location": "CFSL Cyber Forensic Workstation #4",
+              "hours_ago": 24
+            }
+          ]
+        },
+        {
+          "evidence_number": "EVID-2026-00012",
+          "title": "Primary Server SSD",
+          "description": "Samsung 2TB NVMe SSD pulled from compromised server node.",
+          "evidence_type": "device",
+          "sensitivity_level": "secret",
+          "status": "in_custody",
+          "current_custodian_email": "forensic@ncrb.gov.in",
+          "collection_location": "Server Farm Rack 3B, Okhla Industrial Area",
+          "source": "Emergency hardware seizure",
+          "registered_by_email": "officer@ncrb.gov.in",
+          "filename": "intercept.pdf",
+          "custody_events": [
+            {
+              "event_type": "registered",
+              "from_user_email": null,
+              "to_user_email": "officer@ncrb.gov.in",
+              "reason": "Initial hardware extraction from data center rack",
+              "location": "Okhla Data Center",
+              "hours_ago": 60
+            },
+            {
+              "event_type": "transfer_initiated",
+              "from_user_email": "officer@ncrb.gov.in",
+              "to_user_email": "forensic@ncrb.gov.in",
+              "reason": "Hardware bitstream acquisition",
+              "location": "CFSL Delhi",
+              "hours_ago": 40
+            },
+            {
+              "event_type": "transfer_acknowledged",
+              "from_user_email": "officer@ncrb.gov.in",
+              "to_user_email": "forensic@ncrb.gov.in",
+              "reason": "Custody receipt acknowledged: Hardware bitstream acquisition",
+              "location": "CFSL Delhi Evidence Room",
+              "hours_ago": 39
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_number": "CR-2026-FIN002",
+      "fir_number": "FIR-2024-555",
+      "title": "Offshore Hawala & Multi-Crore Banking Fraud",
+      "description": "Forensic financial probe into fraudulent diversion of Rs 50 Crore through dummy corporate accounts and unauthorized foreign remittances under IPC 420/406.",
+      "category": "financial_fraud",
+      "priority": "high",
+      "status": "pending_review",
+      "police_station": "Economic Offences Wing (EOW), Mandir Marg",
+      "district": "Central Delhi",
+      "state": "Delhi",
+      "lead_officer_email": "officer@ncrb.gov.in",
+      "members": [
+        {
+          "email": "officer@ncrb.gov.in",
+          "role_in_case": "lead_investigator"
+        },
+        {
+          "email": "forensic@ncrb.gov.in",
+          "role_in_case": "forensic_analyst"
+        },
+        {
+          "email": "supervisor@ncrb.gov.in",
+          "role_in_case": "supervisor"
+        },
+        {
+          "email": "legal@ncrb.gov.in",
+          "role_in_case": "legal_counsel"
+        }
+      ],
+      "documents": [
+        {
+          "title": "FIR 555 - Mandir Marg",
+          "document_type": "fir",
+          "classification": "confidential",
+          "filename": "fir_555.docx",
+          "mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "uploader_email": "officer@ncrb.gov.in",
+          "ocr_text": "FIRST INFORMATION REPORT\nUnder Section 154 Cr.P.C.\nFIR No. 555/2024 at Police Station Mandir Marg.\nOffence: Section 420 IPC, 406 IPC.\nAccused Suresh Kumar received Rs 50,00,000 by fraudulent misrepresentation.",
+          "summary": "FIRST INFORMATION REPORT\nUnder Section 154 Cr.P.C.\nFIR No. 555/2024 at Police Station Mandir Marg.\nOffence: Section 420 IPC, 406 IPC.\nAccused Suresh Kumar received Rs 50,00,000 by fraudulent misrepresentation.",
+          "entities": [
+            {
+              "entity_type": "law_section",
+              "entity_value": "420 IPC"
+            },
+            {
+              "entity_type": "law_section",
+              "entity_value": "406 IPC"
+            },
+            {
+              "entity_type": "law_section",
+              "entity_value": "154"
+            },
+            {
+              "entity_type": "fir_number",
+              "entity_value": "555/2024"
+            },
+            {
+              "entity_type": "police_station",
+              "entity_value": "Mandir Marg"
+            },
+            {
+              "entity_type": "person",
+              "entity_value": "Suresh Kumar"
+            }
+          ],
+          "chunks": [
+            "FIRST INFORMATION REPORT\nUnder Section 154 Cr.P.C.\nFIR No. 555/2024 at Police Station Mandir Marg.\nOffence: Section 420 IPC, 406 IPC.\nAccused Suresh Kumar received Rs 50,00,000 by fraudulent misrepresentation."
+          ]
+        },
+        {
+          "title": "Bank Account Ledger",
+          "document_type": "supporting_document",
+          "classification": "confidential",
+          "filename": "bank_ledger.docx",
+          "mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "uploader_email": "officer@ncrb.gov.in",
+          "ocr_text": "BANK OF BARODA AUDIT REPORT\nSuspect transfer of 50 lakhs to shell entity offshore.\nAccount number 458902189.",
+          "summary": "BANK OF BARODA AUDIT REPORT\nSuspect transfer of 50 lakhs to shell entity offshore.\nAccount number 458902189.",
+          "entities": [
+            {
+              "entity_type": "organization",
+              "entity_value": "Bank of Baroda"
+            },
+            {
+              "entity_type": "case_number",
+              "entity_value": "458902189"
+            }
+          ],
+          "chunks": [
+            "BANK OF BARODA AUDIT REPORT\nSuspect transfer of 50 lakhs to shell entity offshore.\nAccount number 458902189."
+          ]
+        },
+        {
+          "title": "Hawala Wire Transfer Investigation Transcript",
+          "document_type": "investigation_report",
+          "classification": "confidential",
+          "filename": "hawala.docx",
+          "mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "uploader_email": "officer@ncrb.gov.in",
+          "ocr_text": "INVESTIGATION TRANSCRIPT:\nSuspect Rajesh Sharma transferred Rs 2.5 Crores via hawala operator in Chandni Chowk to overseas account.",
+          "summary": "INVESTIGATION TRANSCRIPT:\nSuspect Rajesh Sharma transferred Rs 2.5 Crores via hawala operator in Chandni Chowk to overseas account.",
+          "entities": [
+            {
+              "entity_type": "person",
+              "entity_value": "Rajesh Sharma"
+            },
+            {
+              "entity_type": "location",
+              "entity_value": "Chandni Chowk"
+            }
+          ],
+          "chunks": [
+            "INVESTIGATION TRANSCRIPT:\nSuspect Rajesh Sharma transferred Rs 2.5 Crores via hawala operator in Chandni Chowk to overseas account."
+          ]
+        },
+        {
+          "title": "SEBI Corporate Forensic Audit",
+          "document_type": "supporting_document",
+          "classification": "confidential",
+          "filename": "audit.docx",
+          "mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "uploader_email": "officer@ncrb.gov.in",
+          "ocr_text": "SECURITIES AND EXCHANGE BOARD OF INDIA AUDIT\nForensic analysis detected shell company accounts routing illicit transactions through foreign banks.",
+          "summary": "SECURITIES AND EXCHANGE BOARD OF INDIA AUDIT\nForensic analysis detected shell company accounts routing illicit transactions through foreign banks.",
+          "entities": [
+            {
+              "entity_type": "organization",
+              "entity_value": "Securities and Exchange Board of India"
+            }
+          ],
+          "chunks": [
+            "SECURITIES AND EXCHANGE BOARD OF INDIA AUDIT\nForensic analysis detected shell company accounts routing illicit transactions through foreign banks."
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_number": "EVID-2026-00011",
+          "title": "Notebook of Accounts",
+          "description": "Handwritten ledger notebook detailing hawala transaction tokens, currency codes, and overseas recipient aliases.",
+          "evidence_type": "physical_evidence",
+          "sensitivity_level": "sensitive",
+          "status": "in_custody",
+          "current_custodian_email": "forensic@ncrb.gov.in",
+          "collection_location": "Shop 42, Chandni Chowk Commercial Market",
+          "source": "Seized during search under Section 165 CrPC",
+          "registered_by_email": "officer@ncrb.gov.in",
+          "filename": null,
+          "custody_events": [
+            {
+              "event_type": "registered",
+              "from_user_email": null,
+              "to_user_email": "officer@ncrb.gov.in",
+              "reason": "Seizure of financial account books from premises",
+              "location": "Chandni Chowk",
+              "hours_ago": 80
+            },
+            {
+              "event_type": "transfer_initiated",
+              "from_user_email": "officer@ncrb.gov.in",
+              "to_user_email": "forensic@ncrb.gov.in",
+              "reason": "For handwriting analysis",
+              "location": "CFSL Questioned Documents Division",
+              "hours_ago": 50
+            },
+            {
+              "event_type": "transfer_acknowledged",
+              "from_user_email": "officer@ncrb.gov.in",
+              "to_user_email": "forensic@ncrb.gov.in",
+              "reason": "Custody accepted for ink and handwriting comparison",
+              "location": "CFSL Documents Vault",
+              "hours_ago": 49
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_number": "CR-2026-HOM003",
+      "fir_number": "FIR-2026-104",
+      "title": "Rohini Industrial Area Armed Homicide & Ballistics",
+      "description": "Armed robbery resulting in firearm homicide. Recovery of 9mm spent cartridge casings and improvised country-made firearm.",
+      "category": "violent_crime",
+      "priority": "critical",
+      "status": "open",
+      "police_station": "Sector 3 Police Station, Rohini",
+      "district": "North West Delhi",
+      "state": "Delhi",
+      "lead_officer_email": "officer@ncrb.gov.in",
+      "members": [
+        {
+          "email": "officer@ncrb.gov.in",
+          "role_in_case": "lead_investigator"
+        },
+        {
+          "email": "forensic@ncrb.gov.in",
+          "role_in_case": "forensic_analyst"
+        },
+        {
+          "email": "supervisor@ncrb.gov.in",
+          "role_in_case": "supervisor"
+        },
+        {
+          "email": "legal@ncrb.gov.in",
+          "role_in_case": "legal_counsel"
+        }
+      ],
+      "documents": [
+        {
+          "title": "Ballistics Analysis Report",
+          "document_type": "forensic_report",
+          "classification": "confidential",
+          "filename": "ballistics.docx",
+          "mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "uploader_email": "forensic@ncrb.gov.in",
+          "ocr_text": "FORENSIC SCIENCE LABORATORY\nBallistics examination of 9mm cartridge casing recovered from crime scene.\nConfirmed fired from country-made pistol Exhibit 2.",
+          "summary": "FORENSIC SCIENCE LABORATORY\nBallistics examination of 9mm cartridge casing recovered from crime scene.\nConfirmed fired from country-made pistol Exhibit 2.",
+          "entities": [
+            {
+              "entity_type": "organization",
+              "entity_value": "Forensic Science Laboratory"
+            },
+            {
+              "entity_type": "evidence_ref",
+              "entity_value": "Exhibit 2"
+            }
+          ],
+          "chunks": [
+            "FORENSIC SCIENCE LABORATORY\nBallistics examination of 9mm cartridge casing recovered from crime scene.\nConfirmed fired from country-made pistol Exhibit 2."
+          ]
+        },
+        {
+          "title": "Witness Statement - Rajat Verma",
+          "document_type": "witness_statement",
+          "classification": "confidential",
+          "filename": "witness_statement.docx",
+          "mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "uploader_email": "officer@ncrb.gov.in",
+          "ocr_text": "STATEMENT OF WITNESS UNDER SECTION 161 CrPC.\nI, Rajat Verma, state that on 20th October at 11:30 PM, I saw the blue sedan registration DL 01 AB 9988 leaving the warehouse premises at high speed. The driver was wearing a black jacket.",
+          "summary": "STATEMENT OF WITNESS UNDER SECTION 161 CrPC.\nI, Rajat Verma, state that on 20th October at 11:30 PM, I saw the blue sedan registration DL 01 AB 9988 leaving the warehouse premises at high speed. The driver was wearing a black jacket.",
+          "entities": [
+            {
+              "entity_type": "person",
+              "entity_value": "Rajat Verma"
+            },
+            {
+              "entity_type": "law_section",
+              "entity_value": "161 CrPC"
+            },
+            {
+              "entity_type": "vehicle_number",
+              "entity_value": "DL 01 AB 9988"
+            }
+          ],
+          "chunks": [
+            "STATEMENT OF WITNESS UNDER SECTION 161 CrPC.\nI, Rajat Verma, state that on 20th October at 11:30 PM, I saw the blue sedan registration DL 01 AB 9988 leaving the warehouse premises at high speed. The driver was wearing a black jacket."
+          ]
+        },
+        {
+          "title": "Crime Scene Perimeter Photo",
+          "document_type": "evidence_record",
+          "classification": "confidential",
+          "filename": "crime_scene.jpg",
+          "mime_type": "image/jpeg",
+          "uploader_email": "officer@ncrb.gov.in",
+          "ocr_text": "CRIME SCENE PHOTO - EXHIBIT A\nPhysical evidence marker 1: 9mm projectile recovery location.\nMarker 2: Tire tread impressions on wet tarmac.",
+          "summary": "High-resolution photographic documentation of recovered physical evidence markers."
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_number": "EVID-2026-00047",
+          "title": "Blood Sample Vial",
+          "description": "Sterile EDTA vial containing blood splatter sample recovered from crime scene warehouse floor.",
+          "evidence_type": "forensic_artifact",
+          "sensitivity_level": "standard",
+          "status": "archived",
+          "current_custodian_email": "forensic@ncrb.gov.in",
+          "collection_location": "Warehouse Plot 12, Rohini Industrial Area Phase 2",
+          "source": "Forensic crime scene team swab",
+          "registered_by_email": "officer@ncrb.gov.in",
+          "filename": null,
+          "custody_events": [
+            {
+              "event_type": "registered",
+              "from_user_email": null,
+              "to_user_email": "officer@ncrb.gov.in",
+              "reason": "Blood sample collection at crime scene",
+              "location": "Rohini Industrial Area",
+              "hours_ago": 96
+            },
+            {
+              "event_type": "in_analysis",
+              "from_user_email": "officer@ncrb.gov.in",
+              "to_user_email": "forensic@ncrb.gov.in",
+              "reason": "DNA profiling and serological grouping",
+              "location": "FSL Rohini Serology Lab",
+              "hours_ago": 70
+            },
+            {
+              "event_type": "analyzed",
+              "from_user_email": "forensic@ncrb.gov.in",
+              "to_user_email": "forensic@ncrb.gov.in",
+              "reason": "DNA profile generated and matched to database",
+              "location": "FSL Rohini Serology Lab",
+              "hours_ago": 50
+            },
+            {
+              "event_type": "submitted_to_court",
+              "from_user_email": "forensic@ncrb.gov.in",
+              "to_user_email": "legal@ncrb.gov.in",
+              "reason": "Marked as Prosecution Exhibit P-4 for Rohini Sessions Court",
+              "location": "Court Evidence Vault",
+              "hours_ago": 30
+            },
+            {
+              "event_type": "archived",
+              "from_user_email": "legal@ncrb.gov.in",
+              "to_user_email": "legal@ncrb.gov.in",
+              "reason": "Trial concluded, biological sample preserved in cold repository",
+              "location": "State Bio-Archive Cold Storage",
+              "hours_ago": 10
+            }
+          ]
+        },
+        {
+          "evidence_number": "EVID-2026-00021",
+          "title": "Country-Made 9mm Pistol & Magazine",
+          "description": "Improvised semi-automatic firearm with loaded magazine containing three live 9mm rounds.",
+          "evidence_type": "physical_evidence",
+          "sensitivity_level": "highly_sensitive",
+          "status": "in_custody",
+          "current_custodian_email": "officer@ncrb.gov.in",
+          "collection_location": "Discovered concealed in storm drain adjacent to crime scene",
+          "source": "Search operation under panchnama",
+          "registered_by_email": "officer@ncrb.gov.in",
+          "filename": null,
+          "custody_events": [
+            {
+              "event_type": "registered",
+              "from_user_email": null,
+              "to_user_email": "officer@ncrb.gov.in",
+              "reason": "Recovery and seizure under panchnama",
+              "location": "Rohini Sector 3",
+              "hours_ago": 40
+            },
+            {
+              "event_type": "integrity_verified",
+              "from_user_email": "officer@ncrb.gov.in",
+              "to_user_email": "officer@ncrb.gov.in",
+              "reason": "Secured in Malkhana armory locker with verified hash",
+              "location": "PS Rohini Malkhana",
+              "hours_ago": 38
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_number": "CR-2026-NAR004",
+      "fir_number": "FIR-2026-302",
+      "title": "Cross-Border Contraband & Synthetic Narcotics Syndicate",
+      "description": "Seizure of 4.5kg synthetic narcotics, satellite communications equipment, and digital ledgers during interstate highway interception.",
+      "category": "narcotics",
+      "priority": "high",
+      "status": "pending_legal",
+      "police_station": "Narcotics Control Cell, RK Puram",
+      "district": "South Delhi",
+      "state": "Delhi",
+      "lead_officer_email": "officer@ncrb.gov.in",
+      "members": [
+        {
+          "email": "officer@ncrb.gov.in",
+          "role_in_case": "lead_investigator"
+        },
+        {
+          "email": "supervisor@ncrb.gov.in",
+          "role_in_case": "supervisor"
+        },
+        {
+          "email": "legal@ncrb.gov.in",
+          "role_in_case": "legal_counsel"
+        }
+      ],
+      "documents": [
+        {
+          "title": "Tactical Intercept Log",
+          "document_type": "investigation_report",
+          "classification": "secret",
+          "filename": "intercept.pdf",
+          "mime_type": "application/pdf",
+          "uploader_email": "officer@ncrb.gov.in",
+          "ocr_text": "NARCOTICS INTERCEPT TRANSCRIPT\nIntercept ID: INT-9901\nCoded delivery coordinates: NH-48 Km Stone 42.\nSuspect vehicle Toyota Fortuner DL 08 CD 1122.",
+          "summary": "Highway tactical intercept detailing rendezvous location and courier vehicle description."
+        },
+        {
+          "title": "Confidential Intelligence Brief",
+          "document_type": "supporting_document",
+          "classification": "secret",
+          "filename": "confidential.pdf",
+          "mime_type": "application/pdf",
+          "uploader_email": "officer@ncrb.gov.in",
+          "ocr_text": "CONFIDENTIAL INTELLIGENCE BRIEF\nSource grade A1.\nDistribution syndicate operates financial transfers through cryptocurrency mixers.",
+          "summary": "Intelligence dossier outlining syndicate supply network and laundering nodes."
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_number": "EVID-2026-00013",
+          "title": "Encrypted Memory Card",
+          "description": "SanDisk Extreme 64GB MicroSD card recovered from vehicle dashboard compartment.",
+          "evidence_type": "device",
+          "sensitivity_level": "secret",
+          "status": "submitted_to_court",
+          "current_custodian_email": "legal@ncrb.gov.in",
+          "collection_location": "NH-48 Toll Plaza, Gurugram Border",
+          "source": "Vehicle search seizure",
+          "registered_by_email": "officer@ncrb.gov.in",
+          "filename": null,
+          "custody_events": [
+            {
+              "event_type": "registered",
+              "from_user_email": null,
+              "to_user_email": "officer@ncrb.gov.in",
+              "reason": "Highway checkpoint seizure",
+              "location": "NH-48 Toll Plaza",
+              "hours_ago": 72
+            },
+            {
+              "event_type": "transfer_initiated",
+              "from_user_email": "officer@ncrb.gov.in",
+              "to_user_email": "forensic@ncrb.gov.in",
+              "reason": "Flash chip dump",
+              "location": "CFSL Delhi",
+              "hours_ago": 50
+            },
+            {
+              "event_type": "transfer_acknowledged",
+              "from_user_email": "officer@ncrb.gov.in",
+              "to_user_email": "forensic@ncrb.gov.in",
+              "reason": "Custody receipt acknowledged: Flash chip dump",
+              "location": "CFSL Delhi",
+              "hours_ago": 49
+            },
+            {
+              "event_type": "submitted_to_court",
+              "from_user_email": "forensic@ncrb.gov.in",
+              "to_user_email": "legal@ncrb.gov.in",
+              "reason": "Presented before Special NDPS Court Magistrate",
+              "location": "Patiala House Courts",
+              "hours_ago": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_number": "CR-2026-CORR005",
+      "fir_number": "FIR-2026-789",
+      "title": "State Infrastructure Tender Bribery & Wiretap Operation",
+      "description": "Covert surveillance and court-authorized audio intercepts exposing systemic bribery in municipal highway contracting.",
+      "category": "corruption",
+      "priority": "high",
+      "status": "pending_legal",
+      "police_station": "Anti-Corruption Bureau (ACB), Barakhamba Road",
+      "district": "New Delhi",
+      "state": "Delhi",
+      "lead_officer_email": "officer@ncrb.gov.in",
+      "members": [
+        {
+          "email": "officer@ncrb.gov.in",
+          "role_in_case": "lead_investigator"
+        },
+        {
+          "email": "supervisor@ncrb.gov.in",
+          "role_in_case": "supervisor"
+        },
+        {
+          "email": "legal@ncrb.gov.in",
+          "role_in_case": "legal_counsel"
+        }
+      ],
+      "documents": [
+        {
+          "title": "Whistleblower Sworn Deposition",
+          "document_type": "witness_statement",
+          "classification": "confidential",
+          "filename": "deposition_test.docx",
+          "mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "uploader_email": "officer@ncrb.gov.in",
+          "ocr_text": "SWORN STATEMENT UNDER SECTION 164 CrPC\nWhistleblower disclosure regarding 12 percent procurement kickbacks paid in cash to public works officials.",
+          "summary": "Sworn deposition before magistrate detailing kickback percentages paid to public works engineers."
+        },
+        {
+          "title": "Audited Tender Price Inflation Sheets",
+          "document_type": "supporting_document",
+          "classification": "confidential",
+          "filename": "fesibility.png",
+          "mime_type": "image/png",
+          "uploader_email": "officer@ncrb.gov.in",
+          "ocr_text": "FINANCIAL AUDIT COMPARISON SHEET\nTender bid markup comparison proving 340% over-invoicing.",
+          "summary": "Audited tender document chart highlighting fraudulent price inflation markups."
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_number": "EVID-2026-00014",
+          "title": "Wiretap Audio & Transcript Evidence",
+          "description": "Court authorized wiretap audio intercepts (MP3) and certified transcript of negotiation between bidder and chief engineer.",
+          "evidence_type": "digital_document",
+          "sensitivity_level": "standard",
+          "status": "in_custody",
+          "current_custodian_email": "officer@ncrb.gov.in",
+          "collection_location": "Special Surveillance Center, MHA",
+          "source": "Lawful electronic intercept order",
+          "registered_by_email": "officer@ncrb.gov.in",
+          "filename": "cctv_log.pdf",
+          "custody_events": [
+            {
+              "event_type": "registered",
+              "from_user_email": null,
+              "to_user_email": "officer@ncrb.gov.in",
+              "reason": "Master recording ingested into DocShield vault with Section 65B certification",
+              "location": "ACB Headquarters",
+              "hours_ago": 45
+            },
+            {
+              "event_type": "integrity_verified",
+              "from_user_email": "officer@ncrb.gov.in",
+              "to_user_email": "officer@ncrb.gov.in",
+              "reason": "Secured in tamper-evident digital locker with verified hash",
+              "location": "ACB Secure Storage",
+              "hours_ago": 40
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_number": "CR-2025-ARCH006",
+      "fir_number": "FIR-2025-042",
+      "title": "Customs Duty Evasion & Luxury Goods Smuggling (Concluded)",
+      "description": "Successfully concluded trial of high-value contraband evasion at international air cargo terminal. Conviction upheld.",
+      "category": "economic_offences",
+      "priority": "medium",
+      "status": "archived",
+      "police_station": "IGI Airport Police Station",
+      "district": "South West Delhi",
+      "state": "Delhi",
+      "lead_officer_email": "officer@ncrb.gov.in",
+      "members": [
+        {
+          "email": "officer@ncrb.gov.in",
+          "role_in_case": "lead_investigator"
+        },
+        {
+          "email": "legal@ncrb.gov.in",
+          "role_in_case": "legal_counsel"
+        }
+      ],
+      "documents": [
+        {
+          "title": "Final Judgment of Conviction",
+          "document_type": "judgment",
+          "classification": "public",
+          "filename": "verified.pdf",
+          "mime_type": "application/pdf",
+          "uploader_email": "legal@ncrb.gov.in",
+          "ocr_text": "IN THE COURT OF SESSIONS JUDGE, PATIALA HOUSE COURTS\nState vs. Sanjeev Mehra\nAccused convicted under Section 135(1)(b) Customs Act 1962 and sentenced to 4 years rigorous imprisonment.",
+          "summary": "Final judgment of Special Court convicting accused under Customs Act Section 135."
+        },
+        {
+          "title": "Airport Cargo Seizure Memorandum",
+          "document_type": "police_report",
+          "classification": "internal",
+          "filename": "fir_record.docx",
+          "mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "uploader_email": "officer@ncrb.gov.in",
+          "ocr_text": "CUSTOMS SEIZURE MEMORANDUM\nIGI Airport Air Cargo Complex.\nConsignment box airway bill AWB-88190 intercepted containing undeclared Swiss horological units.",
+          "summary": "Initial airport interception and seizure memo of undeclared commercial luxury packets."
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_number": "EVID-2026-00077",
+          "title": "Impounded Commercial Consignment Box",
+          "description": "Reinforced timber transit case with customs lead seal intact containing seized items.",
+          "evidence_type": "physical_evidence",
+          "sensitivity_level": "standard",
+          "status": "archived",
+          "current_custodian_email": "officer@ncrb.gov.in",
+          "collection_location": "IGI Cargo Terminal Shed 4",
+          "source": "Customs preventative detention",
+          "registered_by_email": "officer@ncrb.gov.in",
+          "filename": null,
+          "custody_events": [
+            {
+              "event_type": "registered",
+              "from_user_email": null,
+              "to_user_email": "officer@ncrb.gov.in",
+              "reason": "Cargo complex seizure",
+              "location": "IGI Cargo Terminal",
+              "hours_ago": 200
+            },
+            {
+              "event_type": "submitted_to_court",
+              "from_user_email": "officer@ncrb.gov.in",
+              "to_user_email": "legal@ncrb.gov.in",
+              "reason": "Produced as material exhibit during trial",
+              "location": "Patiala House Courts",
+              "hours_ago": 120
+            },
+            {
+              "event_type": "archived",
+              "from_user_email": "legal@ncrb.gov.in",
+              "to_user_email": "officer@ncrb.gov.in",
+              "reason": "Appellate period elapsed without challenge, returned to customs treasury warehouse",
+              "location": "Customs Central Warehouse",
+              "hours_ago": 50
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
