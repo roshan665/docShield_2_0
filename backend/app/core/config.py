@@ -36,6 +36,20 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int = 5432
     POSTGRES_DB: str = "sih190"
 
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def validate_database_url(cls, v: Any) -> str | None:
+        if v and isinstance(v, str):
+            v = v.strip()
+            if v.startswith("https://") or v.startswith("http://"):
+                raise ValueError(
+                    f"DATABASE_URL was configured as an HTTP(S) URL ({v}). "
+                    "DATABASE_URL must be a PostgreSQL URI starting with 'postgresql://' or 'postgres://'. "
+                    "If using Supabase, copy the URI from Project Settings -> Database -> Connection string -> URI "
+                    "(do not use the Project URL https://...)."
+                )
+        return v
+
     # Redis Configuration
     REDIS_URL: str | None = None
     REDIS_HOST: str = "localhost"

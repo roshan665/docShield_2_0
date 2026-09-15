@@ -14,6 +14,7 @@ sys.path.insert(0, str(backend_dir))
 from sqlalchemy import select
 from app.core.database import AsyncSessionLocal
 from app.core.security import hash_password
+# pyrefly: ignore [missing-import]
 from app.models.auth import Permission, Role, RolePermission, User
 
 

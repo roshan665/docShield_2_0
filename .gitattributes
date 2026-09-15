@@ -1,0 +1,9 @@
+# Ensure shell scripts always have Unix line endings (LF)
+*.sh text eol=lf
+
+# Ensure markdown and text files are normalized
+*.md text
+*.py text
+*.json text
+*.yaml text
+*.yml text

@@ -1,0 +1,57 @@
+services:
+  # ---------------------------------------------------------------------------
+  # FastAPI Backend Web Service
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: sih190-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: bash render_start.sh
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: BACKEND_CORS_ORIGINS
+        sync: false
+      - key: S3_ENDPOINT_URL
+        sync: false
+      - key: S3_ACCESS_KEY
+        sync: false
+      - key: S3_SECRET_KEY
+        sync: false
+      - key: S3_BUCKET_DOCUMENTS
+        value: sih190-documents
+      - key: S3_BUCKET_EVIDENCE
+        value: sih190-evidence
+      - key: GEMINI_API_KEY
+        sync: false
+
+  # ---------------------------------------------------------------------------
+  # Next.js 14 Frontend Web Service
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: sih190-frontend
+    runtime: node
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.16.0
+      - key: NEXT_PUBLIC_API_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
