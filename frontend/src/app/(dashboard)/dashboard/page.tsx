@@ -28,6 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/lib/auth-context";
+import { Permission, PermissionGuard } from "@/lib/rbac";
 import { listCases, listAuditEvents, getSecurityMetrics, listCaseDocuments, listCaseEvidence } from "@/lib/api";
 import { Case, AuditEvent, SecurityMetrics } from "@/types";
 
@@ -99,7 +100,7 @@ const SECURITY_MATRIX = [
 ];
 
 export default function DashboardHomePage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user, appRole, hasRole } = useAuth();
   const [loading, setLoading] = useState(true);
   const [cases, setCases] = useState<Case[]>([]);
   const [auditEvents, setAuditEvents] = useState<AuditEvent[]>([]);
@@ -170,6 +171,21 @@ export default function DashboardHomePage() {
   const activeCasesCount = cases.length;
   const integrityHealth = metrics && metrics.integrity_compromises > 0 ? "Compromised" : "100%";
 
+  // Role-customized title and subtitle
+  const dashboardTitle =
+    appRole === "Admin"
+      ? "Admin Command Center"
+      : appRole === "Advocate"
+      ? "Advocate & Legal Counsel Dashboard"
+      : "Officer Investigation Command Center";
+
+  const dashboardSubtitle =
+    appRole === "Admin"
+      ? "Zero-Trust administrative oversight of cases, users, security metrics, and cryptographic ledger."
+      : appRole === "Advocate"
+      ? "Authorized court dossiers, permitted legal documents, and compliance records."
+      : "Assigned active cases, chain of custody logs, and field investigation dossiers.";
+
   return (
     <div className="space-y-8">
       {/* Header Command Center */}
@@ -177,14 +193,14 @@ export default function DashboardHomePage() {
         <div>
           <div className="flex items-center gap-2.5">
             <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 font-sans">
-              Digital Evidence Command Center
+              {dashboardTitle}
             </h1>
             <Badge variant="gov" className="font-mono text-[10px] uppercase">
-              NCRB Production
+              {appRole || "AUTHENTICATED"}
             </Badge>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Secure oversight of cases, evidence, documents and integrity.
+            {dashboardSubtitle}
           </p>
         </div>
 
@@ -453,9 +469,11 @@ export default function DashboardHomePage() {
                 Live cryptographic ledger events recorded across authorized cases
               </CardDescription>
             </div>
-            <Link href="/settings" className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium">
-              Verify Hash Chain &rarr;
-            </Link>
+            <PermissionGuard permission={Permission.SYSTEM_SETTINGS}>
+              <Link href="/settings" className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                Verify Hash Chain &rarr;
+              </Link>
+            </PermissionGuard>
           </CardHeader>
 
           <CardContent>

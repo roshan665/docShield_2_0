@@ -1,5 +1,6 @@
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
+import { RouteGuard } from "@/lib/rbac";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -8,7 +9,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className="md:pl-64 flex flex-col flex-1 min-w-0">
         <Header />
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
-          {children}
+          <RouteGuard>
+            {children}
+          </RouteGuard>
         </main>
       </div>
     </div>

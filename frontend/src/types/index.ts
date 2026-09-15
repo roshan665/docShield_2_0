@@ -1,9 +1,15 @@
+export type AppRole = "Admin" | "Officer" | "Advocate";
+
 export type UserRole =
   | "investigator"
   | "forensic_expert"
   | "legal_officer"
   | "supervisor"
-  | "system_admin";
+  | "system_admin"
+  | "admin"
+  | "officer"
+  | "advocate"
+  | AppRole;
 
 export interface User {
   id: string;
@@ -11,6 +17,7 @@ export interface User {
   email: string;
   full_name: string;
   role: UserRole;
+  app_role?: AppRole;
   role_display_name?: string;
   department?: string | null;
   designation?: string | null;
@@ -135,16 +142,19 @@ export interface Case {
   police_station?: string | null;
   created_by: string;
   investigating_officer_id?: string | null;
+  lead_officer_id?: string | null;
   creator_name?: string;
   investigating_officer_name?: string | null;
   user_role_in_case?: string | null;
   members_count?: number;
+  members?: CaseMember[];
   created_at: string;
   updated_at?: string | null;
   closed_at?: string | null;
 }
 
 export interface CaseCreateRequest {
+  case_number?: string;
   title: string;
   description?: string;
   priority?: CasePriority;

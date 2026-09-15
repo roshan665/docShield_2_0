@@ -56,6 +56,9 @@ class AIService:
         Enforce zero-trust case scoping.
         Non-members receive 404 to avoid enumeration.
         """
+        if user.role and user.role.name in ("system_admin", "admin"):
+            return
+
         case = await self.case_repo.get_by_id(case_id)
         if not case:
             raise EntityNotFoundException(detail="Case not found", error_code="CASE_001")

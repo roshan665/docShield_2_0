@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-context";
+import { normalizeRole } from "@/lib/rbac";
 
 const baseNavigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -22,33 +23,43 @@ const baseNavigation = [
   { name: "Documents", href: "/documents", icon: FileText },
   { name: "Evidence Vault", href: "/evidence", icon: Boxes },
   { name: "Search & Intelligence", href: "/search", icon: Search },
-  { name: "System Settings", href: "/settings", icon: Settings },
 ];
 
 const ROLE_LABELS: Record<string, string> = {
-  investigator: "Investigator",
-  forensic_expert: "Forensic Expert",
-  legal_officer: "Legal Officer",
-  supervisor: "Supervisor",
-  system_admin: "System Administrator",
+  investigator: "Officer",
+  forensic_expert: "Officer",
+  legal_officer: "Advocate",
+  supervisor: "Officer",
+  system_admin: "Admin",
+  officer: "Officer",
+  advocate: "Advocate",
+  admin: "Admin",
 };
 
 export function getRoleLabel(role?: string | null, displayName?: string | null): string {
   if (displayName) return displayName;
   if (!role) return "—";
-  return ROLE_LABELS[role] || role.replace(/_/g, " ").replace(/\\b\\w/g, (c) => c.toUpperCase());
+  const normalized = normalizeRole(role);
+  if (normalized) return normalized;
+  return ROLE_LABELS[role] || role.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, hasRole } = useAuth();
 
   const navigation = [...baseNavigation];
-  if (user?.role === "system_admin") {
-    navigation.splice(navigation.length - 1, 0, {
+  // System Administration routes strictly for Admin
+  if (hasRole("Admin")) {
+    navigation.push({
       name: "Security Monitoring",
       href: "/security",
       icon: ShieldAlert,
+    });
+    navigation.push({
+      name: "System Settings",
+      href: "/settings",
+      icon: Settings,
     });
   }
 

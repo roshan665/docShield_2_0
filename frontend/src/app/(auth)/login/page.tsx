@@ -119,22 +119,30 @@ export default function LoginPage() {
               <KeyRound className="h-3.5 w-3.5 text-blue-400" />
               <span className="font-mono text-[11px]">Evaluation Quick-Fill:</span>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-1.5">
               <button
                 type="button"
-                onClick={() => fillCredentials("officer@ncrb.gov.in", "Investigator@2026!")}
-                className="rounded-lg border border-slate-700/80 bg-slate-800/80 p-2 text-left text-[11px] text-slate-200 hover:bg-slate-700/90 hover:border-blue-500 transition shadow-sm"
+                onClick={() => fillCredentials("admin@docshield.gov.in", "Admin@12345")}
+                className="rounded-lg border border-slate-700/80 bg-slate-800/80 p-2 text-left text-[11px] text-slate-200 hover:bg-slate-700/90 hover:border-amber-500 transition shadow-sm"
               >
-                <div className="font-semibold text-blue-400">Investigator</div>
-                <div className="text-[10px] text-slate-400 truncate font-mono">officer@ncrb.gov.in</div>
+                <div className="font-semibold text-amber-400 text-[11px]">Admin</div>
+                <div className="text-[9px] text-slate-400 truncate font-mono">admin@docshield.gov.in</div>
               </button>
               <button
                 type="button"
-                onClick={() => fillCredentials("admin@ncrb.gov.in", "Admin@DocShield2026!")}
-                className="rounded-lg border border-slate-700/80 bg-slate-800/80 p-2 text-left text-[11px] text-slate-200 hover:bg-slate-700/90 hover:border-amber-500 transition shadow-sm"
+                onClick={() => fillCredentials("officer@docshield.gov.in", "Officer@12345")}
+                className="rounded-lg border border-slate-700/80 bg-slate-800/80 p-2 text-left text-[11px] text-slate-200 hover:bg-slate-700/90 hover:border-blue-500 transition shadow-sm"
               >
-                <div className="font-semibold text-amber-400">System Admin</div>
-                <div className="text-[10px] text-slate-400 truncate font-mono">admin@ncrb.gov.in</div>
+                <div className="font-semibold text-blue-400 text-[11px]">Officer</div>
+                <div className="text-[9px] text-slate-400 truncate font-mono">officer@docshield.gov.in</div>
+              </button>
+              <button
+                type="button"
+                onClick={() => fillCredentials("advocate@docshield.gov.in", "Advocate@12345")}
+                className="rounded-lg border border-slate-700/80 bg-slate-800/80 p-2 text-left text-[11px] text-slate-200 hover:bg-slate-700/90 hover:border-purple-500 transition shadow-sm"
+              >
+                <div className="font-semibold text-purple-400 text-[11px]">Advocate</div>
+                <div className="text-[9px] text-slate-400 truncate font-mono">advocate@docshield.gov.in</div>
               </button>
             </div>
           </div>

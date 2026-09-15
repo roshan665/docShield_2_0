@@ -50,6 +50,7 @@ import {
   processDocumentAI,
   verifyExtractedEntity,
 } from "@/lib/api";
+import { useAuth } from "@/lib/auth-context";
 
 interface DocumentVaultProps {
   caseId?: string;
@@ -88,12 +89,17 @@ function formatBytes(bytes?: number | null): string {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 }
 
+const LEGAL_DOCUMENT_TYPES: DocumentType[] = ["court_filing", "supporting_document", "other"];
+
 export function DocumentVault({
   caseId,
   caseTitle,
   canUpload = true,
   onDocumentCountChange,
 }: DocumentVaultProps) {
+  const { user, hasRole } = useAuth();
+  const isAdvocate = hasRole("Advocate");
+
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -123,9 +129,14 @@ export function DocumentVault({
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [uploadTitle, setUploadTitle] = useState("");
   const [uploadDesc, setUploadDesc] = useState("");
-  const [uploadType, setUploadType] = useState<DocumentType>("fir");
+  const [uploadType, setUploadType] = useState<DocumentType>(isAdvocate ? "court_filing" : "fir");
   const [uploadClassification, setUploadClassification] = useState<DocumentClassification>("unclassified");
   const [uploading, setUploading] = useState(false);
+
+  const handleOpenUploadModal = () => {
+    setUploadType(isAdvocate ? "court_filing" : "fir");
+    setShowUploadModal(true);
+  };
 
   // Version Upload State
   const [versionFile, setVersionFile] = useState<File | null>(null);
@@ -299,6 +310,11 @@ export function DocumentVault({
       return;
     }
 
+    if (isAdvocate && !LEGAL_DOCUMENT_TYPES.includes(uploadType)) {
+      setErrorMsg("Advocates are authorized to upload legal documents and court submissions only.");
+      return;
+    }
+
     try {
       setUploading(true);
       setErrorMsg(null);
@@ -315,7 +331,7 @@ export function DocumentVault({
       setUploadFile(null);
       setUploadTitle("");
       setUploadDesc("");
-      setUploadType("fir");
+      setUploadType(isAdvocate ? "court_filing" : "fir");
       setUploadClassification("unclassified");
       await loadDocuments();
     } catch (err: unknown) {
@@ -330,6 +346,11 @@ export function DocumentVault({
     e.preventDefault();
     if (!versionFile || !activeDocForVersion) {
       setErrorMsg("Please select a file for the new version.");
+      return;
+    }
+
+    if (isAdvocate && !LEGAL_DOCUMENT_TYPES.includes(activeDocForVersion.document_type)) {
+      setErrorMsg("Advocates are restricted to uploading revisions for legal documents only.");
       return;
     }
 
@@ -425,12 +446,12 @@ export function DocumentVault({
 
         {canUpload && caseId && (
           <Button
-            onClick={() => setShowUploadModal(true)}
+            onClick={handleOpenUploadModal}
             size="sm"
             className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 h-9"
           >
             <UploadCloud className="h-4 w-4" />
-            Upload Case Document
+            {isAdvocate ? "Upload Legal Filing" : "Upload Case Document"}
           </Button>
         )}
       </div>
@@ -613,7 +634,7 @@ export function DocumentVault({
                       </Button>
 
                       {/* Upload New Version Button */}
-                      {canUpload && (
+                      {canUpload && (!isAdvocate || LEGAL_DOCUMENT_TYPES.includes(doc.document_type)) && (
                         <Button
                           variant="ghost"
                           size="sm"
@@ -712,11 +733,13 @@ export function DocumentVault({
                     onChange={(e) => setUploadType(e.target.value as DocumentType)}
                     className="w-full h-9 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 text-xs text-slate-900 dark:text-slate-100"
                   >
-                    {Object.entries(DOCUMENT_TYPE_LABELS).map(([val, label]) => (
-                      <option key={val} value={val}>
-                        {label}
-                      </option>
-                    ))}
+                    {Object.entries(DOCUMENT_TYPE_LABELS)
+                      .filter(([val]) => !isAdvocate || LEGAL_DOCUMENT_TYPES.includes(val as DocumentType))
+                      .map(([val, label]) => (
+                        <option key={val} value={val}>
+                          {label}
+                        </option>
+                      ))}
                   </select>
                 </div>
 

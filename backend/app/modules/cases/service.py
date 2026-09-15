@@ -121,18 +121,20 @@ class CaseService:
         client_ip: str | None = None,
     ) -> CaseResponse:
         """
-        Retrieves case details after verifying explicit active membership.
+        Retrieves case details after verifying explicit active membership or Admin role.
         Non-members receive 404 to avoid leaking existence (IDOR protection).
         """
+        is_admin = bool(current_user.role and current_user.role.name in ("system_admin", "admin"))
         membership = await self.case_repo.check_membership(case_id, current_user.id)
-        if not membership:
+        if not membership and not is_admin:
             raise EntityNotFoundException(detail="Case not found", error_code="CASE_001")
 
         case = await self.case_repo.get_by_id(case_id)
         if not case:
             raise EntityNotFoundException(detail="Case not found", error_code="CASE_001")
 
-        return self._build_case_response(case, user_role_in_case=membership.role_in_case)
+        role_in_case = membership.role_in_case if membership else "admin"
+        return self._build_case_response(case, user_role_in_case=role_in_case)
 
     async def list_cases(
         self,
@@ -144,17 +146,27 @@ class CaseService:
         limit: int = 50,
     ) -> tuple[list[CaseResponse], int]:
         """
-        Lists only cases where current_user is an active member in case_members.
-        Guarantees zero cross-case leakage.
+        Lists cases. Admins can view all cases across the system;
+        Officers/Advocates only see cases where they are an active member.
         """
-        items, total = await self.case_repo.list_cases_for_user(
-            user_id=current_user.id,
-            status=status,
-            priority=priority,
-            search=search,
-            skip=skip,
-            limit=limit,
-        )
+        is_admin = bool(current_user.role and current_user.role.name in ("system_admin", "admin"))
+        if is_admin:
+            items, total = await self.case_repo.list_all_cases(
+                status=status,
+                priority=priority,
+                search=search,
+                skip=skip,
+                limit=limit,
+            )
+        else:
+            items, total = await self.case_repo.list_cases_for_user(
+                user_id=current_user.id,
+                status=status,
+                priority=priority,
+                search=search,
+                skip=skip,
+                limit=limit,
+            )
         responses = [self._build_case_response(case, role) for case, role in items]
         return responses, total
 
@@ -170,11 +182,12 @@ class CaseService:
         Updates case details or status. Verifies user is an active member
         with lead_investigator or supervisor role, and validates state machine transitions.
         """
+        is_admin = bool(current_user.role and current_user.role.name in ("system_admin", "admin"))
         membership = await self.case_repo.check_membership(case_id, current_user.id)
-        if not membership:
+        if not membership and not is_admin:
             raise EntityNotFoundException(detail="Case not found", error_code="CASE_001")
 
-        if membership.role_in_case not in ("lead_investigator", "supervisor") and current_user.role.name not in ("supervisor", "system_admin"):
+        if not is_admin and (not membership or membership.role_in_case not in ("lead_investigator", "supervisor")) and current_user.role.name not in ("supervisor", "system_admin"):
             raise PermissionDeniedException(
                 detail="Only lead investigator or supervisor may update case details",
                 error_code="AUTHZ_001",
@@ -235,7 +248,8 @@ class CaseService:
             user_agent=user_agent,
         )
 
-        return self._build_case_response(case, user_role_in_case=membership.role_in_case)
+        role_in_case = membership.role_in_case if membership else "admin"
+        return self._build_case_response(case, user_role_in_case=role_in_case)
 
     async def delete_case(
         self,
@@ -247,11 +261,12 @@ class CaseService:
         """
         Soft-archives a case in accordance with evidence preservation requirements.
         """
+        is_admin = bool(current_user.role and current_user.role.name in ("system_admin", "admin"))
         membership = await self.case_repo.check_membership(case_id, current_user.id)
-        if not membership:
+        if not membership and not is_admin:
             raise EntityNotFoundException(detail="Case not found", error_code="CASE_001")
 
-        if membership.role_in_case not in ("lead_investigator", "supervisor") and current_user.role.name not in ("supervisor", "system_admin"):
+        if not is_admin and (not membership or membership.role_in_case not in ("lead_investigator", "supervisor")) and current_user.role.name not in ("supervisor", "system_admin"):
             raise PermissionDeniedException(
                 detail="Only lead investigator or supervisor may archive a case",
                 error_code="AUTHZ_001",
@@ -293,11 +308,12 @@ class CaseService:
         Adds an officer to the case team.
         Prevents duplicate active memberships and rejects deactivated users.
         """
+        is_admin = bool(current_user.role and current_user.role.name in ("system_admin", "admin"))
         membership = await self.case_repo.check_membership(case_id, current_user.id)
-        if not membership:
+        if not membership and not is_admin:
             raise EntityNotFoundException(detail="Case not found", error_code="CASE_001")
 
-        if membership.role_in_case not in ("lead_investigator", "supervisor") and current_user.role.name not in ("supervisor", "system_admin"):
+        if not is_admin and (not membership or membership.role_in_case not in ("lead_investigator", "supervisor")) and current_user.role.name not in ("supervisor", "system_admin"):
             raise PermissionDeniedException(
                 detail="Only lead investigator or supervisor may manage case team members",
                 error_code="AUTHZ_001",
@@ -368,11 +384,12 @@ class CaseService:
         """
         Soft-removes an officer from a case. Prevents removal of the last lead investigator.
         """
+        is_admin = bool(current_user.role and current_user.role.name in ("system_admin", "admin"))
         membership = await self.case_repo.check_membership(case_id, current_user.id)
-        if not membership:
+        if not membership and not is_admin:
             raise EntityNotFoundException(detail="Case not found", error_code="CASE_001")
 
-        if membership.role_in_case not in ("lead_investigator", "supervisor") and current_user.role.name not in ("supervisor", "system_admin"):
+        if not is_admin and (not membership or membership.role_in_case not in ("lead_investigator", "supervisor")) and current_user.role.name not in ("supervisor", "system_admin"):
             raise PermissionDeniedException(
                 detail="Only lead investigator or supervisor may remove case team members",
                 error_code="AUTHZ_001",
@@ -409,9 +426,10 @@ class CaseService:
             )
 
     async def list_members(self, case_id: UUID, current_user: User) -> list[CaseMemberResponse]:
-        """Lists active case members. User must be an active member of the case."""
+        """Lists active case members. User must be an active member of the case or an Admin."""
+        is_admin = bool(current_user.role and current_user.role.name in ("system_admin", "admin"))
         membership = await self.case_repo.check_membership(case_id, current_user.id)
-        if not membership:
+        if not membership and not is_admin:
             raise EntityNotFoundException(detail="Case not found", error_code="CASE_001")
 
         members = await self.case_repo.list_members(case_id)
@@ -439,10 +457,11 @@ class CaseService:
     ) -> list[CaseTimelineEventResponse]:
         """
         Retrieves the chronological audit timeline for a case.
-        User must be an active member of the case.
+        User must be an active member of the case or an Admin.
         """
+        is_admin = bool(current_user.role and current_user.role.name in ("system_admin", "admin"))
         membership = await self.case_repo.check_membership(case_id, current_user.id)
-        if not membership:
+        if not membership and not is_admin:
             raise EntityNotFoundException(detail="Case not found", error_code="CASE_001")
 
         events, _ = await self.audit_service.list_events(case_id=case_id, limit=100)

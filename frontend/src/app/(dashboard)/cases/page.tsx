@@ -32,6 +32,7 @@ import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuth } from "@/lib/auth-context";
+import { Permission, PermissionGuard } from "@/lib/rbac";
 import {
   listCases,
   getCaseById,
@@ -71,7 +72,7 @@ const ALLOWED_TRANSITIONS: Record<CaseStatus, CaseStatus[]> = {
 };
 
 export default function CasesPage() {
-  const { user } = useAuth();
+  const { user, canAccessCase, canPerformAction, hasPermission } = useAuth();
 
   // Case List state
   const [cases, setCases] = useState<Case[]>([]);
@@ -129,7 +130,9 @@ export default function CasesPage() {
         search: searchQuery.trim() || undefined,
         limit: 100,
       });
-      setCases(items);
+      // Enforce data-level access boundary
+      const authorizedCases = items.filter((c) => canAccessCase(c));
+      setCases(authorizedCases);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setErrorMsg(err.message);
@@ -139,7 +142,7 @@ export default function CasesPage() {
     } finally {
       setLoading(false);
     }
-  }, [statusFilter, priorityFilter, searchQuery]);
+  }, [statusFilter, priorityFilter, searchQuery, canAccessCase]);
 
   useEffect(() => {
     fetchCases();
@@ -156,6 +159,10 @@ export default function CasesPage() {
 
   // Fetch full case dossier when a case is selected
   const handleSelectCase = async (c: Case) => {
+    if (!canAccessCase(c)) {
+      setErrorMsg("Security Violation: You do not possess authorization to inspect this case dossier.");
+      return;
+    }
     setActiveCase(c);
     setActiveTab("details");
     setLoadingDetails(true);
@@ -204,11 +211,16 @@ export default function CasesPage() {
   };
 
   // ==========================================
-  // Case Actions
+  // Case Actions (Action-Level Protection Enforced)
   // ==========================================
 
   const handleCreateCase = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!canPerformAction(Permission.CASE_CREATE)) {
+      setErrorMsg("Security Violation: Your role does not have permission to register new cases.");
+      return;
+    }
+
     if (!createForm.title.trim()) {
       setErrorMsg("Case title is mandatory.");
       return;
@@ -246,6 +258,11 @@ export default function CasesPage() {
 
   const handleStatusTransition = async (newStatus: CaseStatus) => {
     if (!activeCase) return;
+    if (!canPerformAction(Permission.CASE_STATUS_UPDATE, { caseItem: activeCase, caseMembers: members })) {
+      setErrorMsg("Security Violation: You do not have permission to modify investigation status.");
+      return;
+    }
+
     setUpdatingStatus(true);
     setErrorMsg(null);
     try {
@@ -262,6 +279,10 @@ export default function CasesPage() {
   const handleAddMember = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!activeCase || !selectedOfficerId) return;
+    if (!canPerformAction(Permission.CASE_ASSIGN, { caseItem: activeCase, caseMembers: members })) {
+      setErrorMsg("Security Violation: You do not have permission to assign officers to cases.");
+      return;
+    }
 
     setAddingMember(true);
     setErrorMsg(null);
@@ -283,6 +304,11 @@ export default function CasesPage() {
 
   const handleRemoveMember = async (memberUserId: string, officerName?: string) => {
     if (!activeCase) return;
+    if (!canPerformAction(Permission.CASE_ASSIGN, { caseItem: activeCase, caseMembers: members })) {
+      setErrorMsg("Security Violation: You do not have permission to reassign or revoke officer access.");
+      return;
+    }
+
     if (!confirm(`Are you sure you want to revoke case access for ${officerName || "this officer"}?`)) {
       return;
     }
@@ -367,23 +393,28 @@ export default function CasesPage() {
 
           {/* Status Transitions */}
           <div className="flex items-center gap-2">
-            {validTransitions.length > 0 && (
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-slate-500 font-medium">Advance State:</span>
-                {validTransitions.map((nextStatus) => (
-                  <Button
-                    key={nextStatus}
-                    size="sm"
-                    variant="outline"
-                    disabled={updatingStatus}
-                    onClick={() => handleStatusTransition(nextStatus)}
-                    className="h-8 text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900 hover:bg-blue-50 dark:hover:bg-blue-950"
-                  >
-                    &rarr; {nextStatus.replace("_", " ")}
-                  </Button>
-                ))}
-              </div>
-            )}
+            <PermissionGuard
+              permission={Permission.CASE_STATUS_UPDATE}
+              context={{ caseItem: activeCase, caseMembers: members }}
+            >
+              {validTransitions.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-500 font-medium">Advance State:</span>
+                  {validTransitions.map((nextStatus) => (
+                    <Button
+                      key={nextStatus}
+                      size="sm"
+                      variant="outline"
+                      disabled={updatingStatus}
+                      onClick={() => handleStatusTransition(nextStatus)}
+                      className="h-8 text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900 hover:bg-blue-50 dark:hover:bg-blue-950"
+                    >
+                      &rarr; {nextStatus.replace("_", " ")}
+                    </Button>
+                  ))}
+                </div>
+              )}
+            </PermissionGuard>
             <Button
               variant="ghost"
               size="sm"
@@ -628,13 +659,18 @@ export default function CasesPage() {
                   Personnel with explicit access to this case dossier, documents, and evidence.
                 </CardDescription>
               </div>
-              <Button
-                size="sm"
-                onClick={() => setShowAddMemberModal(true)}
-                className="h-8 text-xs bg-blue-600 hover:bg-blue-700 text-white"
+              <PermissionGuard
+                permission={Permission.CASE_ASSIGN}
+                context={{ caseItem: activeCase, caseMembers: members }}
               >
-                <PlusCircle className="h-3.5 w-3.5 mr-1.5" /> Assign Officer
-              </Button>
+                <Button
+                  size="sm"
+                  onClick={() => setShowAddMemberModal(true)}
+                  className="h-8 text-xs bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  <PlusCircle className="h-3.5 w-3.5 mr-1.5" /> Assign Officer
+                </Button>
+              </PermissionGuard>
             </CardHeader>
             <CardContent>
               <div className="rounded-md border border-slate-200 dark:border-slate-800 overflow-hidden">
@@ -669,15 +705,21 @@ export default function CasesPage() {
                           {new Date(m.assigned_at).toLocaleDateString()}
                         </td>
                         <td className="px-4 py-3 text-right">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleRemoveMember(m.user_id, m.full_name)}
-                            className="h-7 px-2 text-[11px] text-rose-600 border-rose-200 dark:border-rose-900 hover:bg-rose-50 dark:hover:bg-rose-950"
-                            title="Revoke officer membership from case"
+                          <PermissionGuard
+                            permission={Permission.CASE_ASSIGN}
+                            context={{ caseItem: activeCase, caseMembers: members }}
+                            fallback={<span className="text-slate-400 text-[10px]">—</span>}
                           >
-                            <UserX className="h-3 w-3 mr-1" /> Revoke
-                          </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleRemoveMember(m.user_id, m.full_name)}
+                              className="h-7 px-2 text-[11px] text-rose-600 border-rose-200 dark:border-rose-900 hover:bg-rose-50 dark:hover:bg-rose-950"
+                              title="Revoke officer membership from case"
+                            >
+                              <UserX className="h-3 w-3 mr-1" /> Revoke
+                            </Button>
+                          </PermissionGuard>
                         </td>
                       </tr>
                     ))}
@@ -891,12 +933,14 @@ export default function CasesPage() {
             MHA / NCRB Chain-of-Custody & Zero-Trust Legal Case Lifecycle
           </p>
         </div>
-        <Button
-          onClick={() => setShowCreateModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-medium"
-        >
-          <PlusCircle className="h-4 w-4 mr-2" /> Register New Case
-        </Button>
+        <PermissionGuard permission={Permission.CASE_CREATE}>
+          <Button
+            onClick={() => setShowCreateModal(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium"
+          >
+            <PlusCircle className="h-4 w-4 mr-2" /> Register New Case
+          </Button>
+        </PermissionGuard>
       </div>
 
       {/* Stats Summary Bar */}

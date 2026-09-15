@@ -211,7 +211,7 @@ async def seed_database():
         print(f"  ✓ Added {total_mappings} role-permission mappings")
 
         # D. Seed Initial System Administrator (Development Account)
-        admin_email = "admin@ncrb.gov.in"
+        admin_email = "admin@docshield.gov.in"
         user_q = select(User).where(User.email == admin_email)
         admin_res = await session.execute(user_q)
         admin_user = admin_res.scalar_one_or_none()
@@ -221,7 +221,7 @@ async def seed_database():
                 employee_id="EMP-ADMIN-001",
                 email=admin_email,
                 full_name="DOCSHIELD System Administrator",
-                password_hash=hash_password("Admin@DocShield2026!"),
+                password_hash=hash_password("Admin@12345"),
                 role_id=role_objs["system_admin"].id,
                 department="Information Technology & Cyber Security",
                 designation="Chief System Security Officer",

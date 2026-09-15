@@ -103,6 +103,52 @@ class CaseRepository:
         # Each item is a Row containing (Case, role_in_case)
         return [(row[0], row[1]) for row in items], total
 
+    async def list_all_cases(
+        self,
+        status: str | None = None,
+        priority: str | None = None,
+        search: str | None = None,
+        skip: int = 0,
+        limit: int = 50,
+    ) -> tuple[list[tuple[Case, str]], int]:
+        """
+        Lists all cases across the system (for Admin / System Admin).
+        Returns tuples of (Case, "admin") and the total count.
+        """
+        base_query = (
+            select(Case)
+            .options(
+                selectinload(Case.creator),
+                selectinload(Case.investigating_officer),
+                selectinload(Case.members),
+            )
+        )
+
+        if status:
+            base_query = base_query.where(Case.status == status)
+        if priority:
+            base_query = base_query.where(Case.priority == priority)
+        if search:
+            search_pattern = f"%{search.strip()}%"
+            base_query = base_query.where(
+                or_(
+                    Case.title.ilike(search_pattern),
+                    Case.case_number.ilike(search_pattern),
+                    Case.fir_number.ilike(search_pattern),
+                    Case.police_station.ilike(search_pattern),
+                )
+            )
+
+        subq = base_query.order_by(None).subquery()
+        count_subquery = select(func.count()).select_from(subq)
+        count_res = await self.session.execute(count_subquery)
+        total = count_res.scalar() or 0
+
+        paged_query = base_query.order_by(Case.created_at.desc()).offset(skip).limit(limit)
+        res = await self.session.execute(paged_query)
+        items = res.scalars().all()
+        return [(case, "admin") for case in items], total
+
     async def check_membership(self, case_id: UUID, user_id: UUID) -> CaseMember | None:
         """Checks if a user is an active member of a case."""
         query = select(CaseMember).where(

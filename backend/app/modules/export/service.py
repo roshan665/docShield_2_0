@@ -119,6 +119,9 @@ class ExportService:
         if not case:
             raise EntityNotFoundException(detail="Case not found", error_code="CASE_001")
 
+        if current_user.role and current_user.role.name in ("system_admin", "admin"):
+            return case
+
         # Check membership
         membership = await self.case_repo.check_membership(case_id, current_user.id)
         if not membership:

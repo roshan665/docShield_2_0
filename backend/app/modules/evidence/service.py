@@ -18,7 +18,7 @@ from app.core.exceptions import (
     ValidationException,
 )
 from app.models.auth import User
-from app.models.case import CaseMember
+from app.models.case import Case, CaseMember
 from app.models.custody import EvidenceCustodyEvent
 from app.models.document import Document
 from app.models.evidence import (
@@ -79,6 +79,9 @@ class EvidenceService:
         Enforces zero-trust case membership.
         Non-members receive 404 Not Found to prevent case existence enumeration and IDOR.
         """
+        if user.role and user.role.name in ("system_admin", "admin"):
+            return
+
         case = await self.case_repo.get_by_id(case_id)
         if not case:
             raise EntityNotFoundException(detail="Case not found", error_code="CASE_001")
@@ -88,7 +91,12 @@ class EvidenceService:
             raise EntityNotFoundException(detail="Case not found", error_code="CASE_001")
 
     async def _get_allowed_case_ids_for_user(self, user: User) -> list[UUID]:
-        """Returns IDs of all cases where the user has active membership."""
+        """Returns IDs of all cases where the user has active membership, or all cases for Admin."""
+        if user.role and user.role.name in ("system_admin", "admin"):
+            query = select(Case.id)
+            res = await self.session.execute(query)
+            return list(res.scalars().all())
+
         query = select(CaseMember.case_id).where(
             (CaseMember.user_id == user.id) & (CaseMember.is_active == True)  # noqa: E712
         )

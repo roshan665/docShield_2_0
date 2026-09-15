@@ -39,6 +39,7 @@ import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuth } from "@/lib/auth-context";
+import { Permission, PermissionGuard } from "@/lib/rbac";
 import {
   CaseMember,
   CustodyChainVerificationResult,
@@ -160,7 +161,7 @@ export function EvidenceVault({
   canManage = true,
   onEvidenceCountChange,
 }: EvidenceVaultProps) {
-  const { user: currentUser } = useAuth();
+  const { user: currentUser, canPerformAction, hasPermission } = useAuth();
 
   const [evidenceList, setEvidenceList] = useState<Evidence[]>([]);
   const [caseMembers, setCaseMembers] = useState<CaseMember[]>([]);
@@ -294,6 +295,10 @@ export function EvidenceVault({
   const handleRegisterEvidence = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!caseId) return;
+    if (!canPerformAction(Permission.EVIDENCE_UPLOAD)) {
+      setErrorMsg("Security Violation: Your role is not authorized to register evidence.");
+      return;
+    }
     setRegistering(true);
     setErrorMsg(null);
     setSuccessMsg(null);
@@ -434,6 +439,10 @@ export function EvidenceVault({
 
   // Handler: Verify Chain Continuity
   const handleVerifyChain = async (evidenceId: string) => {
+    if (!canPerformAction(Permission.EVIDENCE_VERIFY)) {
+      setErrorMsg("Security Violation: Your role is not authorized to execute custody chain audits.");
+      return;
+    }
     setVerifyingChain(evidenceId);
     setChainVerifyResult(null);
     try {
@@ -448,6 +457,10 @@ export function EvidenceVault({
 
   // Handler: Verify Digital Integrity
   const handleVerifyDigitalIntegrity = async (evidenceId: string) => {
+    if (!canPerformAction(Permission.EVIDENCE_VERIFY)) {
+      setErrorMsg("Security Violation: Your role is not authorized to execute digital integrity verification.");
+      return;
+    }
     setVerifyingIntegrity(evidenceId);
     try {
       await verifyEvidenceDigitalIntegrity(evidenceId);
@@ -741,12 +754,14 @@ export function EvidenceVault({
 
             {/* Action button */}
             {canManage && caseId && (
-              <Button
-                onClick={() => setShowRegisterModal(true)}
-                className="h-9 bg-blue-600 hover:bg-blue-700 text-white text-xs gap-1.5 shrink-0 shadow-sm"
-              >
-                <PlusCircle className="h-3.5 w-3.5" /> Register Evidence
-              </Button>
+              <PermissionGuard permission={Permission.EVIDENCE_UPLOAD}>
+                <Button
+                  onClick={() => setShowRegisterModal(true)}
+                  className="h-9 bg-blue-600 hover:bg-blue-700 text-white text-xs gap-1.5 shrink-0 shadow-sm"
+                >
+                  <PlusCircle className="h-3.5 w-3.5" /> Register Evidence
+                </Button>
+              </PermissionGuard>
             )}
           </div>
         </CardContent>
@@ -1022,31 +1037,23 @@ export function EvidenceVault({
                     <div className="flex flex-row lg:flex-col gap-2 shrink-0 border-t lg:border-t-0 lg:border-l border-slate-100 dark:border-slate-800 pt-3 lg:pt-0 lg:pl-4 justify-end lg:w-44">
                       {/* PRIMARY ACTION: Verify Artifact (for digital items) */}
                       {item.storage_key ? (
-                        <Button
-                          size="sm"
-                          onClick={() => handleVerifyDigitalIntegrity(item.id)}
-                          disabled={verifyingIntegrity === item.id}
-                          className="h-8 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white gap-1.5 shadow-sm"
-                          title="Execute authoritative streaming cryptographic SHA-256 check against storage vault"
-                        >
-                          <ShieldCheck
-                            className={`h-3.5 w-3.5 ${
-                              verifyingIntegrity === item.id ? "animate-spin" : ""
-                            }`}
-                          />
-                          Verify Artifact
-                        </Button>
-                      ) : (
-                        /* Physical Artifact or Standalone verification */
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleOpenCustodyHistory(item)}
-                          className="h-8 text-xs font-medium border-blue-200 dark:border-blue-900 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950 gap-1.5"
-                        >
-                          <ShieldCheck className="h-3.5 w-3.5 text-blue-600" /> Audit Ledger
-                        </Button>
-                      )}
+                        <PermissionGuard permission={Permission.EVIDENCE_VERIFY}>
+                          <Button
+                            size="sm"
+                            onClick={() => handleVerifyDigitalIntegrity(item.id)}
+                            disabled={verifyingIntegrity === item.id}
+                            className="h-8 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white gap-1.5 shadow-sm"
+                            title="Execute authoritative streaming cryptographic SHA-256 check against storage vault"
+                          >
+                            <ShieldCheck
+                              className={`h-3.5 w-3.5 ${
+                                verifyingIntegrity === item.id ? "animate-spin" : ""
+                              }`}
+                            />
+                            Verify Artifact
+                          </Button>
+                        </PermissionGuard>
+                      ) : null}
 
                       {/* SECONDARY ACTION: Custody Ledger */}
                       <Button
@@ -1061,48 +1068,54 @@ export function EvidenceVault({
 
                       {/* CONTEXTUAL ACTION: Designated Recipient Acknowledgment */}
                       {isPendingCustodian && item.transfer_pending && (
-                        <Button
-                          size="sm"
-                          onClick={() => setActiveEvidenceForAck(item)}
-                          className="h-8 text-xs gap-1.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold shadow-sm animate-pulse"
-                        >
-                          <UserCheck className="h-3.5 w-3.5" /> Acknowledge Handover
-                        </Button>
+                        <PermissionGuard permission={Permission.CASE_STATUS_UPDATE}>
+                          <Button
+                            size="sm"
+                            onClick={() => setActiveEvidenceForAck(item)}
+                            className="h-8 text-xs gap-1.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold shadow-sm animate-pulse"
+                          >
+                            <UserCheck className="h-3.5 w-3.5" /> Acknowledge Handover
+                          </Button>
+                        </PermissionGuard>
                       )}
 
                       {/* CONTEXTUAL ACTION: Custody Handover Actions */}
                       {isCurrentCustodian && !item.transfer_pending && item.status !== "archived" && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setActiveEvidenceForTransfer(item);
-                            setTransferRecipientId("");
-                            setTransferReason("");
-                            setTransferLocation("");
-                          }}
-                          className="h-8 text-xs gap-1.5 text-blue-600 border-blue-200 dark:border-blue-900 hover:bg-blue-50 dark:hover:bg-blue-950 font-medium"
-                        >
-                          <ArrowRightLeft className="h-3.5 w-3.5" /> Transfer Custody
-                        </Button>
+                        <PermissionGuard permission={Permission.CASE_STATUS_UPDATE}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setActiveEvidenceForTransfer(item);
+                              setTransferRecipientId("");
+                              setTransferReason("");
+                              setTransferLocation("");
+                            }}
+                            className="h-8 text-xs gap-1.5 text-blue-600 border-blue-200 dark:border-blue-900 hover:bg-blue-50 dark:hover:bg-blue-950 font-medium"
+                          >
+                            <ArrowRightLeft className="h-3.5 w-3.5" /> Transfer Custody
+                          </Button>
+                        </PermissionGuard>
                       )}
 
                       {/* CONTEXTUAL ACTION: Status Transition Button */}
                       {isCurrentCustodian && hasAllowedTransitions && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setActiveEvidenceForStatus(item);
-                            const nextStates = VALID_TRANSITIONS[item.status] || [];
-                            setTargetStatus(nextStates[0] || "in_analysis");
-                            setStatusReason("");
-                            setStatusLocation("");
-                          }}
-                          className="h-8 text-xs gap-1.5 text-purple-600 border-purple-200 dark:border-purple-900 hover:bg-purple-50 dark:hover:bg-purple-950 font-medium"
-                        >
-                          <RefreshCw className="h-3.5 w-3.5" /> Advance State
-                        </Button>
+                        <PermissionGuard permission={Permission.CASE_STATUS_UPDATE}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setActiveEvidenceForStatus(item);
+                              const nextStates = VALID_TRANSITIONS[item.status] || [];
+                              setTargetStatus(nextStates[0] || "in_analysis");
+                              setStatusReason("");
+                              setStatusLocation("");
+                            }}
+                            className="h-8 text-xs gap-1.5 text-purple-600 border-purple-200 dark:border-purple-900 hover:bg-purple-50 dark:hover:bg-purple-950 font-medium"
+                          >
+                            <RefreshCw className="h-3.5 w-3.5" /> Advance State
+                          </Button>
+                        </PermissionGuard>
                       )}
                     </div>
                   </div>
@@ -1786,22 +1799,24 @@ export function EvidenceVault({
                     Verifies hash-link sequence: H_n = SHA256(canonical_data || H_n-1) from genesis block to current tip.
                   </div>
                 </div>
-                <Button
-                  size="sm"
-                  onClick={() => handleVerifyChain(activeEvidenceForCustody.id)}
-                  disabled={verifyingChain === activeEvidenceForCustody.id}
-                  className="h-8 text-xs bg-blue-600 hover:bg-blue-700 text-white gap-1.5 shadow-sm shrink-0"
-                >
-                  {verifyingChain === activeEvidenceForCustody.id ? (
-                    <>
-                      <LoadingSpinner className="h-3.5 w-3.5" /> Auditing Chain...
-                    </>
-                  ) : (
-                    <>
-                      <ShieldCheck className="h-3.5 w-3.5" /> Audit Hash Continuity
-                    </>
-                  )}
-                </Button>
+                <PermissionGuard permission={Permission.EVIDENCE_VERIFY}>
+                  <Button
+                    size="sm"
+                    onClick={() => handleVerifyChain(activeEvidenceForCustody.id)}
+                    disabled={verifyingChain === activeEvidenceForCustody.id}
+                    className="h-8 text-xs bg-blue-600 hover:bg-blue-700 text-white gap-1.5 shadow-sm shrink-0"
+                  >
+                    {verifyingChain === activeEvidenceForCustody.id ? (
+                      <>
+                        <LoadingSpinner className="h-3.5 w-3.5" /> Auditing Chain...
+                      </>
+                    ) : (
+                      <>
+                        <ShieldCheck className="h-3.5 w-3.5" /> Audit Hash Continuity
+                      </>
+                    )}
+                  </Button>
+                </PermissionGuard>
               </div>
 
               {/* Chain Verification Result Banner */}
